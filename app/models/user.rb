@@ -3,6 +3,6 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :lockable, password_length: 4..128
-
+         :jwt_authenticatable,
+         jwt_revocation_strategy: JwtBlacklist
 end

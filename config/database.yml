@@ -15,6 +15,7 @@ development: &development
 
 test: &test
   <<: *development
+  host: 127.0.0.1
   database: satrab_meetup_test
   password: HicSuntLeones
 

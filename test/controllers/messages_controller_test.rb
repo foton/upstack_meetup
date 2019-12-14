@@ -6,43 +6,33 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get messages_url
-    assert_response :success
-  end
-
-  test "should get new" do
-    get new_message_url
+    get messages_url, as: :json
     assert_response :success
   end
 
   test "should create message" do
     assert_difference('Message.count') do
-      post messages_url, params: { message: { body: @message.body, from_uid: @message.from_uid, is_read: @message.is_read, to_uid: @message.to_uid } }
+      post messages_url, params: { message: { body: @message.body, from_uid: @message.from_uid, is_read: @message.is_read, to_uid: @message.to_uid } }, as: :json
     end
 
-    assert_redirected_to message_url(Message.last)
+    assert_response 201
   end
 
   test "should show message" do
-    get message_url(@message)
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_message_url(@message)
+    get message_url(@message), as: :json
     assert_response :success
   end
 
   test "should update message" do
-    patch message_url(@message), params: { message: { body: @message.body, from_uid: @message.from_uid, is_read: @message.is_read, to_uid: @message.to_uid } }
-    assert_redirected_to message_url(@message)
+    patch message_url(@message), params: { message: { body: @message.body, from_uid: @message.from_uid, is_read: @message.is_read, to_uid: @message.to_uid } }, as: :json
+    assert_response 200
   end
 
   test "should destroy message" do
     assert_difference('Message.count', -1) do
-      delete message_url(@message)
+      delete message_url(@message), as: :json
     end
 
-    assert_redirected_to messages_url
+    assert_response 204
   end
 end

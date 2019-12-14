@@ -6,43 +6,33 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get locations_url
-    assert_response :success
-  end
-
-  test "should get new" do
-    get new_location_url
+    get locations_url, as: :json
     assert_response :success
   end
 
   test "should create location" do
     assert_difference('Location.count') do
-      post locations_url, params: { location: { city: @location.city, country: @location.country, lat: @location.lat, lng: @location.lng, postal_code: @location.postal_code, status: @location.status, surfable: @location.surfable, user_uid: @location.user_uid } }
+      post locations_url, params: { location: { city: @location.city, country: @location.country, lat: @location.lat, lng: @location.lng, postal_code: @location.postal_code, status: @location.status, surfable: @location.surfable, user_uid: @location.user_uid } }, as: :json
     end
 
-    assert_redirected_to location_url(Location.last)
+    assert_response 201
   end
 
   test "should show location" do
-    get location_url(@location)
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_location_url(@location)
+    get location_url(@location), as: :json
     assert_response :success
   end
 
   test "should update location" do
-    patch location_url(@location), params: { location: { city: @location.city, country: @location.country, lat: @location.lat, lng: @location.lng, postal_code: @location.postal_code, status: @location.status, surfable: @location.surfable, user_uid: @location.user_uid } }
-    assert_redirected_to location_url(@location)
+    patch location_url(@location), params: { location: { city: @location.city, country: @location.country, lat: @location.lat, lng: @location.lng, postal_code: @location.postal_code, status: @location.status, surfable: @location.surfable, user_uid: @location.user_uid } }, as: :json
+    assert_response 200
   end
 
   test "should destroy location" do
     assert_difference('Location.count', -1) do
-      delete location_url(@location)
+      delete location_url(@location), as: :json
     end
 
-    assert_redirected_to locations_url
+    assert_response 204
   end
 end
