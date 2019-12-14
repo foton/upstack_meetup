@@ -1,0 +1,29 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: <%= ENV['DATABASE_POOL'] || 15 %>
+  host: <%= ENV['DATABASE_HOST'] || 'localhost' %>
+  port: <%= ENV['DATABASE_PORT'] || 3306 %>
+  username: <%= ENV['DATABASE_USER'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+
+development: &development
+  <<: *default
+  host: 127.0.0.1
+  database: satrab_meetup_dev
+  password: HicSuntLeones
+
+test: &test
+  <<: *development
+  database: satrab_meetup_test
+  password: HicSuntLeones
+
+cucumber:
+  <<: *test
+
+production:
+  <<: *default
+  database: satrab_meetup
+  port: 3306
+  username: up_couch_surfing
+  password: cPE3LB6GTi923b7646CmwYx7
