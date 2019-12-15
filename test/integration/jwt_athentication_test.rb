@@ -5,9 +5,20 @@ class JwtAuthenticationTest < ActionDispatch::IntegrationTest
 
   def setup
     @user = User.create!(email: 'mini@me.com',
-                        password: 'Abcd1234')
+                         password: 'Abcd1234')
 
     @existing_user_params = { email: user.email, password: 'Abcd1234' }
+  end
+
+  def test_login_endpoint_with_get
+    get '/login'
+
+    assert_equal '200', response.code
+
+    john_doe_json = "{\"id\":null,\"uid\":\"\",\"first_name\":\"John\",\"last_name\":\"Doe\",\"email\":\"\"," \
+                    "\"password\":null,\"clear_password\":\"\",\"avatar\":\"\",\"status\":0," \
+                    "\"created_at\":null,\"updated_at\":null}"
+    assert_equal john_doe_json, response.body
   end
 
   def test_successfull_login
@@ -21,6 +32,7 @@ class JwtAuthenticationTest < ActionDispatch::IntegrationTest
     token_from_request = response.headers['Authorization'].split(' ').last
     decoded_token = JWT.decode(token_from_request, ENV['DEVISE_JWT_SECRET_KEY'], true)
     assert decoded_token.first['sub'].present?
+    assert_equal 'user', decoded_token.first['scp']
   end
 
   def test_failed_login
@@ -53,9 +65,4 @@ class JwtAuthenticationTest < ActionDispatch::IntegrationTest
     assert_equal '400', response.code
     expect(JSON.parse(response.body)['errors'].first['title']).to eq('Bad Request')
   end
-
-  # def valid_headers
-  #   { 'CONTENT_TYPE' => 'application/json' }
-  #     #'Authorization' => "Token token=\"#{@api_token.token}\"" }
-  # end
 end

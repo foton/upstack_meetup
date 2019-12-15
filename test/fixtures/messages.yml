@@ -1,13 +1,44 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  from_uid: MyString
-  to_uid: MyString
-  body: MyText
+m12_1:
+  from_uid: first-user
+  to_uid: second-user
+  body: First to Second message 1
+  is_read: true
+
+m12_2:
+  from_uid: second-user
+  to_uid: first-user
+  body: Second to First message 2
+  is_read: true
+
+m12_3:
+  from_uid: first-user
+  to_uid: second-user
+  body: First to Second message 3
+  is_read: true
+
+m12_4:
+  from_uid: second-user
+  to_uid: first-user
+  body: Second to First message 4
   is_read: false
 
-two:
-  from_uid: MyString
-  to_uid: MyString
-  body: MyText
+
+m13_1:
+  from_uid: first-user
+  to_uid: third-user
+  body: First to Third message 1
+  is_read: true
+
+m13_2:
+  from_uid: third-user
+  to_uid: first-user
+  body: Third to First message 3
+  is_read: true
+
+m13_3:
+  from_uid: first-user
+  to_uid: third-user
+  body: First to Third message 3
   is_read: false

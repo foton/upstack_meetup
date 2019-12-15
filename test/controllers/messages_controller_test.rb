@@ -2,35 +2,42 @@ require 'test_helper'
 
 class MessagesControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @message = messages(:one)
+    @message = messages(:m12_1)
+    log_in_as(users(:first))
   end
 
   test "should get index" do
-    get messages_url, as: :json
+    get messages_url, as: :json, headers: valid_headers
     assert_response :success
   end
 
   test "should create message" do
     assert_difference('Message.count') do
-      post messages_url, params: { message: { body: @message.body, from_uid: @message.from_uid, is_read: @message.is_read, to_uid: @message.to_uid } }, as: :json
+      post messages_url,
+          params: { message: { body: @message.body, from_uid: @message.from_uid, is_read: @message.is_read, to_uid: @message.to_uid } },
+          as: :json,
+          headers: valid_headers
     end
 
     assert_response 201
   end
 
   test "should show message" do
-    get message_url(@message), as: :json
+    get message_url(@message), as: :json, headers: valid_headers
     assert_response :success
   end
 
   test "should update message" do
-    patch message_url(@message), params: { message: { body: @message.body, from_uid: @message.from_uid, is_read: @message.is_read, to_uid: @message.to_uid } }, as: :json
+    patch message_url(@message),
+          params: { message: { body: @message.body, from_uid: @message.from_uid, is_read: @message.is_read, to_uid: @message.to_uid } },
+          as: :json,
+          headers: valid_headers
     assert_response 200
   end
 
   test "should destroy message" do
     assert_difference('Message.count', -1) do
-      delete message_url(@message), as: :json
+      delete message_url(@message), as: :json, headers: valid_headers
     end
 
     assert_response 204

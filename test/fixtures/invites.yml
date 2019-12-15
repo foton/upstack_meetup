@@ -1,9 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  from_uid: MyString
-  to_address: MyString
+first2mickey:
+  from_uid: first-user
+  to_address: mickey@disney.com
 
-two:
-  from_uid: MyString
-  to_address: MyString
+first2minie:
+  from_uid: first-user
+  to_address: minie@disney.com
+
+second2harry:
+  from_uid: second-user
+  to_address: harryp@hoghwarts.com

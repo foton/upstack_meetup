@@ -36,7 +36,7 @@ class DeviseChangeUsers < ActiveRecord::Migration[5.2]
     # # add_index :users, :confirmation_token,   unique: true
     # add_index :users, :unlock_token,         unique: true
 
-    puts('rehasihng passwords of existing users for use in Devise')
+    puts('rehashing passwords of existing users for use in Devise')
     User.all.each do |user|
       user.password = user.clear_password
       user.save!

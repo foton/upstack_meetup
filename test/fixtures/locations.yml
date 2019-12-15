@@ -1,21 +1,31 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  user_uid: MyString
-  city: MyString
-  country: MyString
-  postal_code: MyString
-  lat: 9.99
-  lng: 9.99
+first_loc:
+  user_uid: first-user
+  city: Olomouc
+  country: Czech Republic
+  postal_code: 77900
+  lat: 49.593889
+  lng: 17.250833
+  status: 1
+  surfable: true
+
+second_loc:
+  user_uid: second-user
+  city: Olomouc
+  country: Czech Republic
+  postal_code: 77900
+  lat: 49.593889
+  lng: 17.250833
   status: 1
   surfable: false
 
-two:
-  user_uid: MyString
-  city: MyString
-  country: MyString
-  postal_code: MyString
-  lat: 9.99
-  lng: 9.99
+third_loc:
+  user_uid: third-user
+  city: Ankara
+  country: Republic of Turkey
+  postal_code: 78372
+  lat: 40.00
+  lng: 33.00
   status: 1
   surfable: false

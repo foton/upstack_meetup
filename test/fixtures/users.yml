@@ -1,15 +1,31 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+first:
+  uid: first-user
   first_name: User1FN
   last_name: User1LN
   email: user1@example.com
   avatar: User1Avatar
   status: 1
+  clear_password: 'sunnyday'
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'sunnyday') %>
 
-two:
+second:
+  uid: second-user
   first_name: User2FN
   last_name: User2LN
   email: user2@example.com
   avatar: User2Avatar
   status: 1
+  clear_password: 'sunnyday'
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'sunnyday') %>
+
+third:
+  uid: third-user
+  first_name: User3FN
+  last_name: User3LN
+  email: user3@example.com
+  avatar: User3Avatar
+  status: 1
+  clear_password: 'sunnyday'
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'sunnyday') %>
