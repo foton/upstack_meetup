@@ -15,9 +15,9 @@ class JwtAuthenticationTest < ActionDispatch::IntegrationTest
 
     assert_equal '200', response.code
 
-    john_doe_json = "{\"id\":null,\"uid\":\"\",\"first_name\":\"John\",\"last_name\":\"Doe\",\"email\":\"\"," \
-                    "\"password\":null,\"clear_password\":\"\",\"avatar\":\"\",\"status\":0," \
-                    "\"created_at\":null,\"updated_at\":null}"
+    john_doe_json = '{"user":{"id":null,"uid":"","first_name":"John","last_name":"Doe","email":"",' \
+                    '"password":null,"clear_password":"","avatar":"","status":0,' \
+                    '"created_at":null,"updated_at":null},"token":null}'
     assert_equal john_doe_json, response.body
   end
 
@@ -29,7 +29,13 @@ class JwtAuthenticationTest < ActionDispatch::IntegrationTest
     assert_equal '200', response.code
     assert response.headers['Authorization'].present?
 
+    json = JSON.parse(response.body)
+    assert_equal @existing_user_params[:email], json['user']['email']
+
+
     token_from_request = response.headers['Authorization'].split(' ').last
+    assert_equal token_from_request, json['token']
+
     decoded_token = JWT.decode(token_from_request, ENV['DEVISE_JWT_SECRET_KEY'], true)
     assert decoded_token.first['sub'].present?
     assert_equal 'user', decoded_token.first['scp']
