@@ -6,6 +6,10 @@ class LocationsController < ApplicationController
   def index
     @locations = Location.all
 
+    if params[:lat].present? && params[:lng].present?
+      @locations = select_close_locations(lat: params[:lat].to_f, lng: params[:lng].to_f)
+    end
+
     render json: @locations
   end
 
@@ -40,13 +44,19 @@ class LocationsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_location
-      @location = Location.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_location
+    @location = Location.find(params[:id])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def location_params
-      params.require(:location).permit(:user_uid, :city, :country, :postal_code, :lat, :lng, :status, :surfable)
-    end
+  # Only allow a trusted parameter "white list" through.
+  def location_params
+    params.require(:location).permit(:user_uid, :city, :country, :postal_code, :lat, :lng, :status, :surfable)
+  end
+
+  def select_close_locations(lat:, lng:)
+    lat_range = (lat - Location::CLOSE_LIMIT)..(lat + Location::CLOSE_LIMIT)
+    lng_range = (lng - Location::CLOSE_LIMIT)..(lng + Location::CLOSE_LIMIT)
+    @locations.where(lng: lng_range, lat: lat_range)
+  end
 end
