@@ -21,6 +21,9 @@ class UserRoamingTest < ActionDispatch::IntegrationTest
 
     create_location
     find_locations_for_user
+
+    create_message_for(users(:second))
+    read_chat_between(user, users(:second))
   end
 
   def register
@@ -79,10 +82,12 @@ class UserRoamingTest < ActionDispatch::IntegrationTest
   end
 
   def update_user
-    put "/users/#{user.uid}", # TODO: PUT '/profile'
-        params: { user: { last_name: 'TTT' } },
-        as: :json,
-        headers: valid_headers
+    assert_no_difference('User.count') do
+      put "/users/#{user.uid}", # TODO: PUT '/profile'
+          params: { user: { last_name: 'TTT' } },
+          as: :json,
+          headers: valid_headers
+    end
 
     json = json_response
     assert_equal '200', response.code
@@ -91,17 +96,19 @@ class UserRoamingTest < ActionDispatch::IntegrationTest
   end
 
   def create_location
-    post '/locations',
-         params: { location: { user_uid: user.uid,
-                               city: 'Ankara',
-                               country: 'Republic of Turkey',
-                               postal_code: 78_372,
-                               lat: 40.00,
-                               lng: 33.00,
-                               status: 1,
-                               surfable: false } },
-         as: :json,
-         headers: valid_headers
+    assert_difference('Location.count') do
+      post '/locations',
+          params: { location: { user_uid: user.uid,
+                                city: 'Ankara',
+                                country: 'Republic of Turkey',
+                                postal_code: 78_372,
+                                lat: 40.00,
+                                lng: 33.00,
+                                status: 1,
+                                surfable: false } },
+          as: :json,
+          headers: valid_headers
+    end
 
     json = json_response
     assert_equal '201', response.code
@@ -117,8 +124,37 @@ class UserRoamingTest < ActionDispatch::IntegrationTest
     assert_equal 'Ankara', json.first['city']
   end
 
+  def create_message_for(recipient_user)
+    assert_difference('Message.count') do
+      post '/messages',
+           params: { message: { #from_uid: user.uid,  # not needed, it will be appended automagically from current_user
+                                to_uid: recipient_user.uid,
+                                body: 'Hi, I want to say something' } },
+           as: :json,
+           headers: valid_headers
+    end
+
+    json = json_response
+    assert_equal '201', response.code
+    assert_equal 'Hi, I want to say something', json['body']
+    assert_equal 'Hi, I want to say something', user.sent_messages.last.body
+  end
+
+  def read_chat_between(user1, user2)
+    user2.sent_messages << Message.new(to_uid: user1.uid, body: 'I do not want listen!')
+
+    # /messages?chat_between[]=uid1&chat_between[]=uid2
+    get '/messages', params: { chat_between: [user1.uid, user2.uid] }, headers: valid_headers
+
+    json = json_response
+    assert_equal '200', response.code
+    assert_equal 2, json.size
+    assert_equal 'I do not want listen!', json.first['body']
+    assert_equal 'Hi, I want to say something', json.last['body']
+  end
+
   def json_response
-    # puts("Responsebody: #{response.body}")
+     puts("Responsebody: #{response.body}")
     JSON.parse(response.body)
   end
 end
