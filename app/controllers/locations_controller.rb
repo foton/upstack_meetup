@@ -4,11 +4,7 @@ class LocationsController < ApplicationController
 
   # GET /locations
   def index
-    @locations = Location.all
-
-    if params[:lat].present? && params[:lng].present?
-      @locations = select_close_locations(lat: params[:lat].to_f, lng: params[:lng].to_f)
-    end
+    @locations = restrict_locations_by_params(Location.all)
 
     render json: @locations
   end
@@ -54,9 +50,23 @@ class LocationsController < ApplicationController
     params.require(:location).permit(:user_uid, :city, :country, :postal_code, :lat, :lng, :status, :surfable)
   end
 
-  def select_close_locations(lat:, lng:)
+  def restrict_locations_by_params(locations)
+
+    if params[:lat].present? && params[:lng].present?
+      lat_range, lng_range = bounding_close_ranges(lat: params[:lat].to_f, lng: params[:lng].to_f)
+      locations = locations.where(lng: lng_range, lat: lat_range)
+    end
+
+    locations = locations.where(user_uid: params[:user_uid].strip) if params[:user_uid].present?
+
+    locations
+  end
+
+  def bounding_close_ranges(lat:, lng:)
+    # lat = - 90 .. 90 (North pole)
+    # long = -180 .. 180 (0 is Greenwich; + going west)
     lat_range = (lat - Location::CLOSE_LIMIT)..(lat + Location::CLOSE_LIMIT)
     lng_range = (lng - Location::CLOSE_LIMIT)..(lng + Location::CLOSE_LIMIT)
-    @locations.where(lng: lng_range, lat: lat_range)
+    [lat_range, lng_range]
   end
 end

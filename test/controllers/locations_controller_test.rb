@@ -31,6 +31,18 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal close_locations.to_json, response.body
   end
 
+  test "should get locations by user uid" do
+    get locations_url(params: { user_uid: users(:first).uid }),
+        as: :json,
+        headers: valid_headers
+
+    assert_response :success
+    returned_locations = JSON.parse(response.body)
+
+    assert_equal 1, returned_locations.size
+    assert_equal [users(:first).location].to_json, response.body
+  end
+
 
   test "should create location" do
     assert_difference('Location.count') do
