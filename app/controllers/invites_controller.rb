@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class InvitesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_invite, only: [:show, :update, :destroy]
+  before_action :set_invite, only: %i[show update destroy]
 
   # GET /invites
   def index
@@ -40,6 +42,7 @@ class InvitesController < ApplicationController
   end
 
   private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_invite
     @invite = Invite.find(params[:id])

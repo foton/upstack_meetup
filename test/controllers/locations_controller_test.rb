@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class LocationsControllerTest < ActionDispatch::IntegrationTest
@@ -6,7 +8,7 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
     log_in_as(users(:first))
   end
 
-  test "should get index" do
+  test 'should get index' do
     get locations_url, as: :json, headers: valid_headers
 
     assert_response :success
@@ -15,7 +17,7 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal Location.count, locations.size
   end
 
-  test "should get index with lng and lat restriction" do
+  test 'should get index with lng and lat restriction' do
     Location.delete_all
     close_locations = create_related_locations_to(@location, :close, 2)
     distant_locations = create_related_locations_to(@location, :distant, 3)
@@ -31,7 +33,7 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal close_locations.to_json, response.body
   end
 
-  test "should get locations by user uid" do
+  test 'should get locations by user uid' do
     get locations_url(params: { user_uid: users(:first).uid }),
         as: :json,
         headers: valid_headers
@@ -43,7 +45,7 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal [users(:first).location].to_json, response.body
   end
 
-  test "should create location" do
+  test 'should create location' do
     assert_difference('Location.count') do
       post locations_url,
            params: { location: { city: @location.city,
@@ -61,12 +63,12 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
     assert_response 201
   end
 
-  test "should show location" do
+  test 'should show location' do
     get location_url(@location), as: :json, headers: valid_headers
     assert_response :success
   end
 
-  test "should update location" do
+  test 'should update location' do
     patch location_url(@location),
           params: { location: { city: @location.city, country: @location.country, lat: @location.lat, lng: @location.lng, postal_code: @location.postal_code, status: @location.status, surfable: @location.surfable, user_uid: @location.user_uid } },
           as: :json,
@@ -74,7 +76,7 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
     assert_response 200
   end
 
-  test "should destroy location" do
+  test 'should destroy location' do
     assert_difference('Location.count', -1) do
       delete location_url(@location), as: :json, headers: valid_headers
     end
@@ -95,7 +97,7 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
       rand((-1 * Location::CLOSE_LIMIT)..Location::CLOSE_LIMIT)
     else
       signs = [-1, 1]
-      rand((Location::CLOSE_LIMIT + 0.01)..(5 * Location::CLOSE_LIMIT)) * signs[(rand(0..1))]
+      rand((Location::CLOSE_LIMIT + 0.01)..(5 * Location::CLOSE_LIMIT)) * signs[rand(0..1)]
     end
   end
 end

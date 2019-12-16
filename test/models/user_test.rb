@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
@@ -32,17 +34,16 @@ class UserTest < ActiveSupport::TestCase
     u = User.new(valid_params)
     assert u.valid?
 
-    u = User.new(valid_params.merge(last_name:''))
+    u = User.new(valid_params.merge(last_name: ''))
     assert u.valid? # still have first name
 
-    u = User.new(valid_params.merge(first_name:''))
+    u = User.new(valid_params.merge(first_name: ''))
     assert u.valid?
 
-    u = User.new(valid_params.merge(last_name:'', first_name:''))
+    u = User.new(valid_params.merge(last_name: '', first_name: ''))
     refute u.valid?
     assert u.errors[:first_name].present?
     assert u.errors[:last_name].present?
-
   end
 
   def test_should_generate_uid_on_creation_if_there_is_not
@@ -68,6 +69,6 @@ class UserTest < ActiveSupport::TestCase
       last_name: 'Trevory',
       email: 'trevory@company.com',
       password: 'Abcd1234',
-      avatar:'http://url.to.nowhere.com' }
+      avatar: 'http://url.to.nowhere.com' }
   end
 end

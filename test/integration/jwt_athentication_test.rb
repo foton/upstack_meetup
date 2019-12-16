@@ -1,4 +1,6 @@
-require "test_helper"
+# frozen_string_literal: true
+
+require 'test_helper'
 
 class JwtAuthenticationTest < ActionDispatch::IntegrationTest
   attr_reader :user
@@ -32,7 +34,6 @@ class JwtAuthenticationTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body)
     assert_equal @existing_user_params[:email], json['user']['email']
 
-
     token_from_request = response.headers['Authorization'].split(' ').last
     assert_equal token_from_request, json['token']
 
@@ -56,7 +57,7 @@ class JwtAuthenticationTest < ActionDispatch::IntegrationTest
   end
 
   def registration_of_not_existing_user
-    params = { email: 'my@email.com' , password: 'fdsfsfsd'}
+    params = { email: 'my@email.com', password: 'fdsfsfsd' }
     post '/register', params: params
 
     assert_equal '200', response.code
@@ -64,7 +65,7 @@ class JwtAuthenticationTest < ActionDispatch::IntegrationTest
   end
 
   def registration_of_with_existing_email
-    params = { email: @existing_user_params[:email] , password: 'fdsfsfsd'}
+    params = { email: @existing_user_params[:email], password: 'fdsfsfsd' }
 
     post '/register', params: params
 

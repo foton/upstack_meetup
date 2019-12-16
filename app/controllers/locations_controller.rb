@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class LocationsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_location, only: [:show, :update, :destroy]
+  before_action :set_location, only: %i[show update destroy]
 
   # GET /locations
   def index
@@ -40,6 +42,7 @@ class LocationsController < ApplicationController
   end
 
   private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_location
     @location = Location.find(params[:id])

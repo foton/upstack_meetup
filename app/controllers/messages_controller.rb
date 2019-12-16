@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class MessagesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_message, only: [:show, :update, :destroy]
+  before_action :set_message, only: %i[show update destroy]
 
   # GET /messages
   def index
@@ -40,6 +42,7 @@ class MessagesController < ApplicationController
   end
 
   private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_message
     @message = Message.find(params[:id])

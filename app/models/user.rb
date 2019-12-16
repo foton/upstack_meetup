@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -11,7 +13,7 @@ class User < ApplicationRecord
   has_many :received_messages, class_name: 'Message', foreign_key: :to_uid, primary_key: :uid
   has_many :invites, class_name: 'Invite', foreign_key: :from_uid, primary_key: :uid
 
-  before_validation :generate_uid,  if: Proc.new { |user| user.uid.blank? }
+  before_validation :generate_uid,  if: proc { |user| user.uid.blank? }
   validates :uid, presence: true, uniqueness: true
   validate :at_least_one_name
 

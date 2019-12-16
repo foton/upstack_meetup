@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Location < ApplicationRecord
   CLOSE_LIMIT = 0.2 # thi makes distance about 20km around Olomouc :-)
 

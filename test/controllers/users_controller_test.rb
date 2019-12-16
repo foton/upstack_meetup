@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class UsersControllerTest < ActionDispatch::IntegrationTest
@@ -6,7 +8,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     log_in_as(users(:first))
   end
 
-  test "should get index" do
+  test 'should get index' do
     get users_url, as: :json, headers: valid_headers
     assert_response :success
 
@@ -14,10 +16,10 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal User.count, returned_users.size
   end
 
-  test "should get index with limit and offset" do
+  test 'should get index with limit and offset' do
     get users_url(params: { offset: 1, limit: 1 }),
-                  as: :json,
-                  headers: valid_headers
+        as: :json,
+        headers: valid_headers
     assert_response :success
 
     returned_users = JSON.parse(response.body)
@@ -26,8 +28,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal expected_users.to_json, response.body
   end
 
-
-  test "should get users by_user uid" do
+  test 'should get users by_user uid' do
     get users_url(params: { uid: users(:first).uid }),
         as: :json,
         headers: valid_headers
@@ -39,8 +40,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal [users(:first)].to_json, response.body
   end
 
-
-  test "should create user" do
+  test 'should create user' do
     assert_difference('User.count') do
       post users_url,
            params: { user: { avatar: @user.avatar,
@@ -56,12 +56,12 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response 201
   end
 
-  test "should show user" do
+  test 'should show user' do
     get user_url(@user), as: :json, headers: valid_headers
     assert_response :success
   end
 
-  test "should update user" do
+  test 'should update user' do
     patch user_url(@user),
           params: { user: { avatar: @user.avatar, email: @user.email, first_name: @user.first_name, last_name: @user.last_name, status: @user.status } },
           as: :json,
@@ -70,7 +70,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response 200
   end
 
-  test "should destroy user" do
+  test 'should destroy user' do
     assert_difference('User.count', -1) do
       delete user_url(@user), as: :json, headers: valid_headers
     end

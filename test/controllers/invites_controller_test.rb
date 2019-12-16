@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class InvitesControllerTest < ActionDispatch::IntegrationTest
@@ -6,7 +8,7 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
     log_in_as(users(:first))
   end
 
-  test "should get index" do
+  test 'should get index' do
     get invites_url, as: :json, headers: valid_headers
     assert_response :success
 
@@ -14,7 +16,7 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
     assert_equal Invite.count, returned_invites.size
   end
 
-  test "should get invites from user by from_uid" do
+  test 'should get invites from user by from_uid' do
     get invites_url(params: { from_uid: users(:first).uid }),
         as: :json,
         headers: valid_headers
@@ -26,7 +28,7 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
     assert_equal users(:first).invites.to_json, response.body
   end
 
-  test "should create invite" do
+  test 'should create invite' do
     assert_difference('Invite.count') do
       post invites_url,
            params: { invite: { from_uid: @invite.from_uid, to_address: @invite.to_address } },
@@ -37,12 +39,12 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
     assert_response 201
   end
 
-  test "should show invite" do
+  test 'should show invite' do
     get invite_url(@invite), as: :json, headers: valid_headers
     assert_response :success
   end
 
-  test "should update invite" do
+  test 'should update invite' do
     patch invite_url(@invite),
           params: { invite: { from_uid: @invite.from_uid, to_address: @invite.to_address } },
           as: :json,
@@ -50,7 +52,7 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
     assert_response 200
   end
 
-  test "should destroy invite" do
+  test 'should destroy invite' do
     assert_difference('Invite.count', -1) do
       delete invite_url(@invite), as: :json, headers: valid_headers
     end
