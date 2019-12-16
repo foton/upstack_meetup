@@ -4,7 +4,7 @@ class MessagesController < ApplicationController
 
   # GET /messages
   def index
-    @messages = Message.all
+    @messages = restrict_messages_by_params(Message.all.order(created_at: :desc, id: :desc))
 
     render json: @messages
   end
@@ -40,13 +40,29 @@ class MessagesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_message
-      @message = Message.find(params[:id])
+  # Use callbacks to share common setup or constraints between actions.
+  def set_message
+    @message = Message.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def message_params
+    params.require(:message).permit(:from_uid, :to_uid, :body, :is_read)
+  end
+
+  def restrict_messages_by_params(messages)
+    messages = messages.where(from_uid: params[:from_uid].strip) if params[:from_uid].present?
+    messages = messages.where(to_uid: params[:to_uid].strip) if params[:to_uid].present?
+    if params[:chat_between].present?
+      messages = restrict_to_chat_between_uids(messages,
+                                               params[:chat_between].first,
+                                               params[:chat_between].last)
     end
 
-    # Only allow a trusted parameter "white list" through.
-    def message_params
-      params.require(:message).permit(:from_uid, :to_uid, :body, :is_read)
-    end
+    messages
+  end
+
+  def restrict_to_chat_between_uids(messages, uid1, uid2)
+    messages.where(from_uid: uid1, to_uid: uid2).or(messages.where(from_uid: uid2, to_uid: uid1))
+  end
 end

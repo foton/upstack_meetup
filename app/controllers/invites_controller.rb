@@ -4,7 +4,7 @@ class InvitesController < ApplicationController
 
   # GET /invites
   def index
-    @invites = Invite.all
+    @invites = restrict_invites_by_params(Invite.all)
 
     render json: @invites
   end
@@ -40,13 +40,19 @@ class InvitesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_invite
-      @invite = Invite.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_invite
+    @invite = Invite.find(params[:id])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def invite_params
-      params.require(:invite).permit(:from_uid, :to_address)
-    end
+  # Only allow a trusted parameter "white list" through.
+  def invite_params
+    params.require(:invite).permit(:from_uid, :to_address)
+  end
+
+
+  def restrict_invites_by_params(invites)
+    invites = invites.where(from_uid: params[:from_uid].strip) if params[:from_uid].present?
+    invites
+  end
 end

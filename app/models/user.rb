@@ -7,7 +7,7 @@ class User < ApplicationRecord
          jwt_revocation_strategy: JwtBlacklist
 
   has_one :location, foreign_key: :user_uid, primary_key: :uid
-  has_many :sended_messages, class_name: 'Message', foreign_key: :from_uid, primary_key: :uid
+  has_many :sent_messages, class_name: 'Message', foreign_key: :from_uid, primary_key: :uid
   has_many :received_messages, class_name: 'Message', foreign_key: :to_uid, primary_key: :uid
   has_many :invites, class_name: 'Invite', foreign_key: :from_uid, primary_key: :uid
 

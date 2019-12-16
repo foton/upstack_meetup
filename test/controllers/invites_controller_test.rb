@@ -9,6 +9,21 @@ class InvitesControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get invites_url, as: :json, headers: valid_headers
     assert_response :success
+
+    returned_invites = JSON.parse(response.body)
+    assert_equal Invite.count, returned_invites.size
+  end
+
+  test "should get invites from user by from_uid" do
+    get invites_url(params: { from_uid: users(:first).uid }),
+        as: :json,
+        headers: valid_headers
+
+    assert_response :success
+
+    returned_invites = JSON.parse(response.body)
+    assert_equal users(:first).invites.size, returned_invites.size
+    assert_equal users(:first).invites.to_json, response.body
   end
 
   test "should create invite" do

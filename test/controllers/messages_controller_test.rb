@@ -11,6 +11,48 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should get messages sent by user" do
+    get messages_url(params: { from_uid: users(:first).uid }),
+        as: :json,
+        headers: valid_headers
+
+    assert_response :success
+
+    returned_messages = JSON.parse(response.body)
+    expected_messages = users(:first).sent_messages.order(created_at: :desc, id: :desc)
+    assert_equal expected_messages.size, returned_messages.size
+    assert_equal expected_messages.to_json, response.body
+  end
+
+  test "should get messages received by user" do
+    get messages_url(params: { to_uid: users(:first).uid }),
+        as: :json,
+        headers: valid_headers
+
+    assert_response :success
+
+    returned_messages = JSON.parse(response.body)
+    expected_messages = users(:first).received_messages.order(created_at: :desc, id: :desc)
+    assert_equal expected_messages.size, returned_messages.size
+    assert_equal expected_messages.to_json, response.body
+  end
+
+  test "should get chat between users" do
+    # /messages?chat_between%5B%5D=first-user&chat_between%5B%5D=third-user"
+    get messages_url(params: { chat_between: [users(:first).uid, users(:third).uid] }),
+        as: :json,
+        headers: valid_headers
+
+    assert_response :success
+
+    returned_messages = JSON.parse(response.body)
+    expected_messages = (users(:first).sent_messages & users(:third).received_messages)
+    expected_messages += (users(:first).received_messages & users(:third).sent_messages)
+
+    assert_equal expected_messages.size, returned_messages.size
+    assert_equal expected_messages.sort.reverse.to_json, response.body
+  end
+
   test "should create message" do
     assert_difference('Message.count') do
       post messages_url,

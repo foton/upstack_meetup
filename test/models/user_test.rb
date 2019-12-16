@@ -13,15 +13,15 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_can_have_invites
-    assert 2, user.invites.count
+    assert_equal 2, user.invites.count
   end
 
   def test_can_have_sended_messages
-    assert 2, user.sended_messages.count
+    assert_equal 4, user.sent_messages.count
   end
 
   def test_can_have_received_messages
-    assert 2, user.received_messages.count
+    assert_equal 3, user.received_messages.count
   end
 
   def test_should_validate_email

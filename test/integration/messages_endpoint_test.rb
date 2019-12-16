@@ -19,7 +19,7 @@ class MessagesEndpointTest < ActionDispatch::IntegrationTest
     assert_equal '200', response.code
 
     refute(response.body == '[]' || response.body.blank?)
-    assert_equal Message.all.to_json, response.body
+    assert_equal Message.order(created_at: :desc, id: :desc).to_json, response.body
   end
 
   def test_with_params_it_returns_selected_records

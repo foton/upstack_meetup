@@ -43,7 +43,6 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal [users(:first).location].to_json, response.body
   end
 
-
   test "should create location" do
     assert_difference('Location.count') do
       post locations_url,
