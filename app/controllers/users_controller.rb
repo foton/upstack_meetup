@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:update, :destroy]
 
   # GET /users
   def index
@@ -11,6 +11,7 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
+    @user = !params[:id].nil? ? @user = User.find_by_uid(params[:id]) : current_user # for `/profile` there is no ID
     render json: @user
   end
 
