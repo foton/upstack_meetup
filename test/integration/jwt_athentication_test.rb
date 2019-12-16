@@ -61,7 +61,7 @@ class JwtAuthenticationTest < ActionDispatch::IntegrationTest
     post '/register', params: params
 
     assert_equal '200', response.code
-    expect(JSON.parse(response.body)[:email]).to eq(params[:email])
+    assert_equal params[:email], JSON.parse(response.body)[:email]
   end
 
   def registration_of_with_existing_email
@@ -70,6 +70,6 @@ class JwtAuthenticationTest < ActionDispatch::IntegrationTest
     post '/register', params: params
 
     assert_equal '400', response.code
-    expect(JSON.parse(response.body)['errors'].first['title']).to eq('Bad Request')
+    assert_equal 'Bad Request', JSON.parse(response.body)['errors'].first['title']
   end
 end

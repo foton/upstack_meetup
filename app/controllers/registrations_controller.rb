@@ -9,4 +9,8 @@ class RegistrationsController < Devise::RegistrationsController
     resource.save
     render_resource(resource)
   end
+
+  def sign_up_params
+    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :avatar)
+  end
 end
