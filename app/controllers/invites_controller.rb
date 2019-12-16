@@ -4,7 +4,7 @@ class InvitesController < ApplicationController
 
   # GET /invites
   def index
-    @invites = restrict_invites_by_params(Invite.all)
+    @invites = restrict_resources_by_params(Invite.all)
 
     render json: @invites
   end
@@ -50,9 +50,9 @@ class InvitesController < ApplicationController
     params.require(:invite).permit(:from_uid, :to_address)
   end
 
-
-  def restrict_invites_by_params(invites)
-    invites = invites.where(from_uid: params[:from_uid].strip) if params[:from_uid].present?
-    invites
+  def restrict_resources_by_params(resources)
+    resources = super(resources)
+    resources = resources.where(from_uid: params[:from_uid].strip) if params[:from_uid].present?
+    resources
   end
 end

@@ -19,4 +19,10 @@ class ApplicationController < ActionController::API
       ]
     }, status: :bad_request
   end
+
+  def restrict_resources_by_params(resources)
+    resources = resources.limit(params[:limit].strip) if params[:limit].present?
+    resources = resources.offset(params[:offset].strip) if params[:offset].present?
+    resources
+  end
 end

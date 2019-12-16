@@ -53,6 +53,20 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     assert_equal expected_messages.sort.reverse.to_json, response.body
   end
 
+
+  test "should get messages received by user nad not read yet" do
+    get messages_url(params: { to_uid: users(:first).uid, is_read: 0 }),
+        as: :json,
+        headers: valid_headers
+
+    assert_response :success
+
+    returned_messages = JSON.parse(response.body)
+    expected_messages = users(:first).received_messages.where(is_read: 0).order(created_at: :desc, id: :desc)
+    assert_equal expected_messages.size, returned_messages.size
+    assert_equal expected_messages.to_json, response.body
+  end
+
   test "should create message" do
     assert_difference('Message.count') do
       post messages_url,

@@ -4,7 +4,7 @@ class LocationsController < ApplicationController
 
   # GET /locations
   def index
-    @locations = restrict_locations_by_params(Location.all)
+    @locations = restrict_resources_by_params(Location.all)
 
     render json: @locations
   end
@@ -50,16 +50,17 @@ class LocationsController < ApplicationController
     params.require(:location).permit(:user_uid, :city, :country, :postal_code, :lat, :lng, :status, :surfable)
   end
 
-  def restrict_locations_by_params(locations)
+  def restrict_resources_by_params(resources)
+    resources = super(resources)
 
     if params[:lat].present? && params[:lng].present?
       lat_range, lng_range = bounding_close_ranges(lat: params[:lat].to_f, lng: params[:lng].to_f)
-      locations = locations.where(lng: lng_range, lat: lat_range)
+      resources = resources.where(lng: lng_range, lat: lat_range)
     end
 
-    locations = locations.where(user_uid: params[:user_uid].strip) if params[:user_uid].present?
+    resources = resources.where(user_uid: params[:user_uid].strip) if params[:user_uid].present?
 
-    locations
+    resources
   end
 
   def bounding_close_ranges(lat:, lng:)

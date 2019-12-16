@@ -19,6 +19,10 @@ class User < ApplicationRecord
     self.uid = SecureRandom.uuid
   end
 
+  def to_param
+    uid
+  end
+
   def at_least_one_name
     return if (first_name.to_s + last_name.to_s).present?
 

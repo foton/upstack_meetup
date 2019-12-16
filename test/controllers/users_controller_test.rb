@@ -9,7 +9,36 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get users_url, as: :json, headers: valid_headers
     assert_response :success
+
+    returned_users = JSON.parse(response.body)
+    assert_equal User.count, returned_users.size
   end
+
+  test "should get index with limit and offset" do
+    get users_url(params: { offset: 1, limit: 1 }),
+                  as: :json,
+                  headers: valid_headers
+    assert_response :success
+
+    returned_users = JSON.parse(response.body)
+    expected_users = User.limit(1).offset(1)
+    assert_equal 1, returned_users.size
+    assert_equal expected_users.to_json, response.body
+  end
+
+
+  test "should get users by_user uid" do
+    get users_url(params: { uid: users(:first).uid }),
+        as: :json,
+        headers: valid_headers
+
+    assert_response :success
+    returned_users = JSON.parse(response.body)
+
+    assert_equal 1, returned_users.size
+    assert_equal [users(:first)].to_json, response.body
+  end
+
 
   test "should create user" do
     assert_difference('User.count') do
